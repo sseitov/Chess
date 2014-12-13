@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A386b" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="sCG-Ef-fhD">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="WaW-Gt-6Vf">
+            <objects>
+                <navigationController toolbarHidden="NO" id="sCG-Ef-fhD" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="htF-Ek-V4r">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translucent="NO" id="K06-ga-EOB">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="3do-A3-Zc6" kind="relationship" relationship="rootViewController" id="X6m-mz-5sp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vhi-sE-DBg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3076" y="-268"/>
+        </scene>
+        <!--Game Controller-->
+        <scene sceneID="uy4-NQ-ZcY">
+            <objects>
+                <viewController id="3do-A3-Zc6" customClass="GameController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="kDr-PD-YdR"/>
+                        <viewControllerLayoutGuide type="bottom" id="1lk-Gt-k2X"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="B2Z-ur-Boh">
+                        <rect key="frame" x="0.0" y="64" width="768" height="916"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChessDesk~ipad.png" translatesAutoresizingMaskIntoConstraints="NO" id="CHo-oJ-KJw" customClass="Desk">
+                                <rect key="frame" x="44" y="118" width="680" height="680"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="CHo-oJ-KJw" secondAttribute="centerY" id="Mtq-GR-3BZ"/>
+                            <constraint firstAttribute="centerX" secondItem="CHo-oJ-KJw" secondAttribute="centerX" id="eZK-gt-6ua"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="6kH-ja-RWV">
+                        <nil key="title"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="desk" destination="CHo-oJ-KJw" id="YIl-dJ-K5g"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ReC-Sy-gzH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2169" y="-268"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="ChessDesk~ipad.png" width="680" height="680"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
