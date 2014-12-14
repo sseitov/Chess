@@ -64,10 +64,7 @@ namespace vchess {
 		}
 		GameState state() { return _state; }
 		
-		const std::string moveNotation(const Move& m);
-		
 		void doMove(const Move& move);
-
 		Moves genMoves(bool color, const Position& from);	// if from.isNull - all moves
 		int evaluate(bool color);
 

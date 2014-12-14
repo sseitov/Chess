@@ -126,7 +126,7 @@ void Disposition::reset()
 	_state.reset();
 	_endGame = false;
 }
-
+/*
 const std::string Disposition::moveNotation(const Move& m)
 {
 	std::string notation;
@@ -163,7 +163,7 @@ const std::string Disposition::moveNotation(const Move& m)
 	}
 	return notation;
 }
-
+*/
 bool Disposition::checkEnd()
 {
 	int queen[2] = {0, 0};

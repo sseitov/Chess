@@ -10,6 +10,7 @@
 #define __Pocket_Chess__move__
 
 #include "position.h"
+#include <string>
 
 namespace vchess {
 	
@@ -43,15 +44,48 @@ namespace vchess {
 			: from(_from), to(_to), moveType(_moveType), promote(false), firstMove(false), captureFigure(0)
 		{}
 		
+		void createNotation(unsigned char figure)
+		{
+			if (moveType != NotMove) {
+				if (moveType == QueenCastling) {
+					notation = "O-O-O";
+				} else if (moveType == KingCastling) {
+					notation = "O-O";
+				} else {
+					switch (FIGURE(figure)) {
+						case KING:
+							notation = "K";
+							break;
+						case QUEEN:
+							notation = "Q";
+							break;
+						case ROOK:
+							notation = "R";
+							break;
+						case BISHOP:
+							notation = "B";
+							break;
+						case KNIGHT:
+							notation = "N";
+							break;
+						default:
+							notation = "";
+							break;
+					}
+					
+					notation += (from.notation() + to.notation());
+					if (moveType == Capture || moveType == EnPassant || !capturePosition.isNull())
+						notation += "x";
+				}
+			}
+		}
+		
 		std::string shortNotation() const
 		{
 			if (moveType == NotMove) {
 				return "";
 			} else {
-				std::string text = (from.notation() + to.notation());
-				if (moveType == Capture || moveType == EnPassant || !capturePosition.isNull())
-					text += "x";
-				return text;
+				return (from.notation() + to.notation());
 			}
 		}
 

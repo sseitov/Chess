@@ -13,6 +13,8 @@
 #import "DevInfo.h"
 #import "TableViewCell.h"
 
+//#define DO_LOG
+
 enum AlertAction {
 	NoAction,
 	StartGame,
@@ -312,9 +314,10 @@ enum Depth {
 
 - (void)didMakeMove:(vchess::Move)move
 {
-	move.notation = _currentGame.moveNotation(move);
 	[_desk makeMove:move inGame:&_currentGame completion:nil];
+	move.createNotation(_currentGame.state().cellAt(move.to));
 	_moves.push_back(move);
+	[self logMove:move];
 	[_table reloadData];
 	_desk.userInteractionEnabled = NO;
 	[self switchColor];
@@ -509,6 +512,18 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	return alpha;
 }
 
+- (void)logMove:(vchess::Move)move
+{
+#ifdef DO_LOG
+	NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
+	if (move.moveType != vchess::NotMove) {
+		NSLog(@"%@ %s", color, move.notation.c_str());
+	} else {
+		NSLog(@"Invalid move");
+	}
+#endif
+}
+
 - (void)bestMove
 {
 	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -517,23 +532,17 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^() {
 		if (_isDebut) {
 			best_move = [self searchFromBook];
-			if (best_move.moveType != vchess::NotMove) {
-				best_move.notation = _currentGame.moveNotation(best_move);
-			}
 		}
 		if (best_move.moveType == vchess::NotMove) {
 			_isDebut = NO;
 			best_move = vchess::Move();
 			DEPTH = _depth;
 			search(_currentGame, _desk.activeColor, DEPTH, -vchess::W_INFINITY, vchess::W_INFINITY);
-			if (best_move.moveType != vchess::NotMove) {
-				best_move.notation = _currentGame.moveNotation(best_move);
-			}
 		}
-//		NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
-//		if (best_move.moveType != vchess::NotMove) {
-//			NSLog(@"%@ OK %s", color, best_move.notation.c_str());
-//		}
+		if (best_move.moveType != vchess::NotMove) {
+			best_move.createNotation(_currentGame.state().cellAt(best_move.from));
+		}
+		[self logMove:best_move];
 		
 		dispatch_async(dispatch_get_main_queue(), ^()
 					   {

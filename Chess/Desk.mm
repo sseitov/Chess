@@ -160,6 +160,20 @@
 	AudioServicesPlaySystemSound (soundID);
 }
 
+- (BOOL)checkState:(vchess::GameState)state
+{
+	vchess::GameState deskState = [self getDisposition];
+	if (state.isEqual(deskState)) {
+		return YES;
+	} else {
+		NSLog(@"ERROR MOVE. POSITION:");
+		state.print();
+		NSLog(@"ON DESK:");
+		deskState.print();
+		return NO;
+	}
+}
+
 - (void)makeMove:(const vchess::Move&)move
 		  inGame:(vchess::Disposition*)game
 	  completion:(void (^)(BOOL))completion
@@ -170,17 +184,7 @@
 		if (completion) {
 			[self moveFigure:figure to:move.to completion:^(){
 				game->doMove(move);
-				vchess::GameState s1 = game->state();
-				vchess::GameState s2 = [self getDisposition];
-				if (s1.isEqual(s2)) {
-					completion(YES);
-				} else {
-					NSLog(@"ERROR MOVE %s. POSITION:", move.notation.c_str());
-					s1.print();
-					NSLog(@"ON DESK:");
-					s2.print();
-					completion(NO);
-				}
+				completion([self checkState:game->state()]);
 			}];
 		} else {
 			[self moveFigure:figure to:move.to];
