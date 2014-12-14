@@ -556,8 +556,8 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 									   _moves.push_back(best_move);
 									   [_table reloadData];
 									   [self switchColor];
-									   _desk.userInteractionEnabled = YES;
-//									   [self bestMove];
+//									   _desk.userInteractionEnabled = YES;
+									   [self bestMove];
 								   } else {
 									   NSLog(@"ERROR TURN");
 									   [self surrender];

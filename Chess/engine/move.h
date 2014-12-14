@@ -77,6 +77,8 @@ namespace vchess {
 					if (moveType == Capture || moveType == EnPassant || !capturePosition.isNull())
 						notation += "x";
 				}
+			} else {
+				notation = "NULL MOVE";
 			}
 		}
 		
