@@ -74,15 +74,12 @@
 - (vchess::GameState)getDisposition
 {
 	vchess::GameState state;
-	state.reset();
 	for (int y=0; y<8; y++) {
 		for (int x=0; x<8; x++) {
 			vchess::Position pos(x, y);
 			FigureView* figure = [self figureAt:pos];
 			if (figure) {
 				state.setCell(figure.model, pos);
-			} else {
-				state.setCell(0, pos);
 			}
 		}
 	}
@@ -146,10 +143,15 @@
 		int y = vchess::COLOR(figure.model) ? 7 : 0;
 		FigureView *rook = [self figureAt:vchess::Position(x1, y)];
 		[self moveFigure:rook to:vchess::Position(x2, y)];
-	} else if (move.moveType == vchess::Capture || move.moveType == vchess::EnPassant) {
+	} else if (!move.capturePosition.isNull()) {
 		FigureView *eat = [self figureAt:move.capturePosition];
 		eat.liveState = KILLED;
 		[self moveFigure:eat to:vchess::Position()];
+	} else {
+		FigureView* f = [self figureAt:move.to];
+		if (f) {
+			NSLog(@"move type error ");
+		}
 	}
 	
 	if (move.promote) {
@@ -164,10 +166,10 @@
 {
 	FigureView* figure = [self figureAt:move.from];
 	if (figure) {
-		game->makeMove(move);
 		[self prepareMove:move forFigure:figure];
 		if (completion) {
 			[self moveFigure:figure to:move.to completion:^(){
+				game->doMove(move);
 				vchess::GameState s1 = game->state();
 				vchess::GameState s2 = [self getDisposition];
 				if (s1.isEqual(s2)) {
@@ -182,10 +184,13 @@
 			}];
 		} else {
 			[self moveFigure:figure to:move.to];
+			game->doMove(move);
 		}
 	} else {
 		NSLog(@"NO FIGURE AT %s", move.from.notation().c_str());
-		completion(NO);
+		if (completion) {
+			completion(NO);
+		}
 	}
 }
 

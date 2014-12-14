@@ -48,7 +48,9 @@ namespace vchess {
 			if (moveType == NotMove) {
 				return "";
 			} else {
-				std::string text = from.notation() + to.notation();
+				std::string text = (from.notation() + to.notation());
+				if (moveType == Capture || moveType == EnPassant || !capturePosition.isNull())
+					text += "x";
 				return text;
 			}
 		}

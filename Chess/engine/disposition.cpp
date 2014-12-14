@@ -195,33 +195,35 @@ bool Disposition::checkEnd()
 	}
 }
 
-void Disposition::makeMove(const Move& move)
+void Disposition::doMove(const Move& move)
 {
-	_state.setCell(_state.cellAt(move.from) | MOVED, move.to);		// move figure to "to" position
-	
-	if (FIGURE(_state.cellAt(move.to)) == PAWN && move.firstMove) {
-		_state.setCell(_state.cellAt(move.to) | FIRST_MOVE, move.to);
+	bool color = COLOR(_state.cellAt(move.from));
+	unsigned char figure = _state.cellAt(move.from) | MOVED;
+	if (FIGURE(figure) == PAWN && move.firstMove) {
+		figure |= FIRST_MOVE;
+	}
+	if (move.promote) {							// promote pawn to queen
+		figure = QUEEN | MOVED;
+		if (color) {
+			figure |= COLOR_MASK;
+		}
 	}
 	
-	_state.setCell(0, move.from);						// clear "from" position
+	_state.setCell(0, move.from);			// clear "from" position
+	if (!move.capturePosition.isNull()) {	// clear "capture" position
+		_state.setCell(0, move.capturePosition);
+	}
+	_state.setCell(figure, move.to);		// move figure to "to" position
 	
+	int y = color ? 7 : 0;
 	if (move.moveType == QueenCastling) {		// move ROOK if castling
-		int y = COLOR(_state.cellAt(move.from)) ? 7 : 0;
 		_state.setCell(_state.cellAt(Position(0, y)) | MOVED, Position(3,y));
 		_state.setCell(0, Position(0, y));
 	} else if (move.moveType == KingCastling) {
-		int y = COLOR(_state.cellAt(move.from)) ? 7 : 0;
 		_state.setCell(_state.cellAt(Position(7, y)) | MOVED, Position(5,y));
 		_state.setCell(0, Position(7, y));
 	}
 	
-	if (move.promote) {							// promote pawn to queen
-		unsigned char queen = QUEEN | MOVED;
-		if (COLOR(_state.cellAt(move.to))) {
-			queen |= COLOR_MASK;
-		}
-		_state.setCell(queen, move.to);
-	}
 	if (!_endGame) {
 		_endGame = checkEnd();
 	}
@@ -242,8 +244,7 @@ bool Disposition::checkFor(bool color)
 
 Moves Disposition::genMoves(bool color, const Position& from)
 {
-	Moves allMoves = capturesFor(color);
-	
+	Moves allMoves = capturesFor(color);	
 	if (!from.isNull()) {	// filter by position
 		std::vector<Move>::iterator it = allMoves.begin();
 		while (it != allMoves.end()) {
@@ -276,7 +277,7 @@ Moves Disposition::genMoves(bool color, const Position& from)
 		}
 		
 		pushState();
-		makeMove(*it);
+		doMove(*it);
 		bool isCheck = checkFor(color);
 		popState();
 		

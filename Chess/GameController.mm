@@ -469,7 +469,16 @@ enum Depth {
 	int y1 = turn[1] - '1';
 	int x2 = turn[2] - 'a';
 	int y2 = turn[3] - '1';
-	return vchess::Move(vchess::Position(x1, y1), vchess::Position(x2, y2), vchess::Normal);
+	vchess::Position to(x2, y2);
+	unsigned char figure = _currentGame.state().cellAt(to);
+	if (figure) {
+		vchess::Move m(vchess::Position(x1, y1), vchess::Position(x2, y2), vchess::Capture);
+		m.capturePosition = to;
+		m.captureFigure = figure;
+		return m;
+	} else {
+		return vchess::Move(vchess::Position(x1, y1), vchess::Position(x2, y2), vchess::Normal);
+	}
 }
 
 static vchess::Move best_move;
@@ -486,7 +495,7 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	while (it != turns.end() && alpha < beta) {
 		vchess::Move m = *it;
 		position.pushState();
-		position.makeMove(m);
+		position.doMove(m);
 		int tmp = -search(position, !color, depth-1, -beta, -alpha);
 		position.popState();
 		if (tmp > alpha) {
@@ -512,7 +521,6 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 				best_move.notation = _currentGame.moveNotation(best_move);
 			}
 		}
-		NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
 		if (best_move.moveType == vchess::NotMove) {
 			_isDebut = NO;
 			best_move = vchess::Move();
@@ -522,9 +530,10 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 				best_move.notation = _currentGame.moveNotation(best_move);
 			}
 		}
-		if (best_move.moveType != vchess::NotMove) {
-			NSLog(@"%@ OK %s", color, best_move.notation.c_str());
-		}
+//		NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
+//		if (best_move.moveType != vchess::NotMove) {
+//			NSLog(@"%@ OK %s", color, best_move.notation.c_str());
+//		}
 		
 		dispatch_async(dispatch_get_main_queue(), ^()
 					   {
