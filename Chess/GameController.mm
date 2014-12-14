@@ -61,7 +61,7 @@ enum Depth {
 	UIColor* btnColor = [UIColor whiteColor];
 	UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
 	[button setTitleColor:btnColor forState:UIControlStateNormal];
-	button.backgroundColor = [UIColor blackColor];
+	button.backgroundColor = [UIColor grayColor];
 	button.layer.borderWidth = 1.0;
 	button.layer.masksToBounds = YES;
 	button.layer.cornerRadius = 10.0;
@@ -92,7 +92,7 @@ enum Depth {
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_startButton];
 	
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(rotate)];
-	self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
+	self.navigationItem.rightBarButtonItem.tintColor = [UIColor grayColor];
 	
 	_depth = Fast;
 	_levelButton = [GameController buttonWithSize:CGSizeMake(140, 30)];
@@ -110,12 +110,12 @@ enum Depth {
 
 	_timerView = [[UISegmentedControl alloc] initWithItems:@[@"00:00", @"00:00"]];
 	_timerView.userInteractionEnabled = NO;
-	_timerView.tintColor = [UIColor whiteColor];
+	_timerView.tintColor = [UIColor grayColor];
 	[_timerView setWidth:60 forSegmentAtIndex:0];
 	[_timerView setWidth:60 forSegmentAtIndex:1];
 	
 	NSDictionary *attributes = @{UITextAttributeFont: [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.f],
-								 UITextAttributeTextColor: [UIColor whiteColor],
+								 UITextAttributeTextColor: [UIColor blackColor],
 								 UITextAttributeTextShadowColor: [UIColor clearColor],
 								 };
 	[_timerView setTitleTextAttributes:attributes forState:UIControlStateNormal];
@@ -547,8 +547,8 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 									   _moves.push_back(best_move);
 									   [_table reloadData];
 									   [self switchColor];
-	//								   _desk.userInteractionEnabled = YES;
-									   [self bestMove];
+									   _desk.userInteractionEnabled = YES;
+//									   [self bestMove];
 								   } else {
 									   NSLog(@"ERROR TURN");
 									   [self surrender];
