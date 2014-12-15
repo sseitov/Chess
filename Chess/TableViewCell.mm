@@ -23,14 +23,14 @@
 	if (self) {
 		_white = [[UILabel alloc] initWithFrame:CGRectZero];
 		if (white.moveType != vchess::NotMove) {
-			_white.text = [NSString stringWithUTF8String:white.notation.c_str()];
+			_white.text = [NSString stringWithUTF8String:white.notation().c_str()];
 		}
 		_white.textAlignment = NSTextAlignmentCenter;
 		[self.contentView addSubview:_white];
 		
 		_black = [[UILabel alloc] initWithFrame:CGRectZero];
 		if (black.moveType != vchess::NotMove) {
-			_black.text = [NSString stringWithUTF8String:black.notation.c_str()];
+			_black.text = [NSString stringWithUTF8String:black.notation().c_str()];
 		}
 		_black.textAlignment = NSTextAlignmentCenter;
 		[self.contentView addSubview:_black];

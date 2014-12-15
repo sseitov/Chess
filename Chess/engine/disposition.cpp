@@ -244,7 +244,7 @@ bool Disposition::checkFor(bool color)
 
 Moves Disposition::genMoves(bool color, const Position& from)
 {
-	Moves allMoves = capturesFor(color);	
+	Moves allMoves = capturesFor(color);
 	if (!from.isNull()) {	// filter by position
 		std::vector<Move>::iterator it = allMoves.begin();
 		while (it != allMoves.end()) {
@@ -255,7 +255,6 @@ Moves Disposition::genMoves(bool color, const Position& from)
 			}
 		}
 	}
-	
 	for (int y=0; y<8; y++) {
 		for (int x=0; x<8; x++) {
 			if (from.isNull() || from == Position(x, y)) {
@@ -289,6 +288,7 @@ Moves Disposition::genMoves(bool color, const Position& from)
 			it++;
 		}
 	}
+
 	return allMoves;
 }
 
@@ -333,44 +333,36 @@ Moves Disposition::capturesFor(bool color)
 	// create captures (порядок по увеличению веса берущей фигуры)
 	Moves captures;
 	for (int i=0; i<list.size(); i++) {
-		Positions pawns = capturesPawnFor(list[i].pos, color);
+		Moves pawns = capturesPawnFor(list[i].pos, color);
 		for (int figure=KNIGHT; figure>=KING; figure--) {
-			Positions caps = capturesFigureFor(list[i].pos, (Figure)figure);
-			pawns.insert(pawns.end(), caps.begin(), caps.end());
+			Moves figures = capturesFigureFor(list[i].pos, (Figure)figure);
+			pawns.insert(pawns.end(), figures.begin(), figures.end());
 		}
-		for (int j=0; j<pawns.size(); j++) {
-			if (_state.cellAt(list[i].pos) == 0) {
-				Move m(pawns[j], list[i].pos, EnPassant);
-				int offset = color ? 1 : -1;
-				Position enPos = list[i].pos + Position(0, offset);
-				m.captureFigure = _state.cellAt(enPos);
-				m.capturePosition = enPos;
-				captures.push_back(m);
-			} else {
-				Move m(pawns[j], list[i].pos, Capture);
-				m.captureFigure = _state.cellAt(list[i].pos);
-				m.capturePosition = list[i].pos;
-				captures.push_back(m);
-			}
-		}
+		captures.insert(captures.end(), pawns.begin(), pawns.end());
 	}
 	return captures;
 }
 
-Positions Disposition::capturesPawnFor(Position pos, bool color)
+Moves Disposition::capturesPawnFor(Position pos, bool color)
 {
-	Positions captures;
+	Moves captures;
 	int direction = color ? 1 : -1;
 	Position left = pos + Position(-1, direction);
 	if (!left.out_of_desk()) {
 		if (FIGURE(_state.cellAt(left)) == PAWN && COLOR(_state.cellAt(left)) != COLOR(_state.cellAt(pos))) {
-			captures.push_back(left);
+			Move m(PAWN, left, pos, Capture);
+			m.capturePosition = pos;
+			m.captureFigure = FIGURE(_state.cellAt(pos));
+			captures.push_back(m);
 		}
 	}
 	Position right = pos + Position(1, direction);
 	if (!right.out_of_desk()) {
 		if (FIGURE(_state.cellAt(right)) == PAWN && COLOR(_state.cellAt(right)) != COLOR(_state.cellAt(pos))) {
-			captures.push_back(right);
+			Move m(PAWN, right, pos, Capture);
+			m.capturePosition = pos;
+			m.captureFigure = FIGURE(_state.cellAt(pos));
+			captures.push_back(m);
 		}
 	}
 	int enline = COLOR(_state.cellAt(pos)) ? 2 : 5;
@@ -381,13 +373,19 @@ Positions Disposition::capturesPawnFor(Position pos, bool color)
 			left = pos + Position(-1, direction);
 			if (!left.out_of_desk()) {
 				if (FIGURE(_state.cellAt(left)) == PAWN && COLOR(_state.cellAt(left)) == color) {
-					captures.push_back(left);
+					Move m(PAWN, left, pos, EnPassant);
+					m.capturePosition = pawn;
+					m.captureFigure = _state.cellAt(pawn);
+					captures.push_back(m);
 				}
 			}
 			right = pos + Position(1, direction);
 			if (!right.out_of_desk()) {
 				if (FIGURE(_state.cellAt(right)) == PAWN && COLOR(_state.cellAt(right)) == color) {
-					captures.push_back(right);
+					Move m(PAWN, right, pos, EnPassant);
+					m.capturePosition = pawn;
+					m.captureFigure = _state.cellAt(pawn);
+					captures.push_back(m);
 				}
 			}
 		}
@@ -395,9 +393,9 @@ Positions Disposition::capturesPawnFor(Position pos, bool color)
 	return captures;
 }
 
-Positions Disposition::capturesFigureFor(Position from, Figure figure)
+Moves Disposition::capturesFigureFor(Position from, Figure figure)
 {
-	Positions captures;
+	Moves captures;
 	int index = KNIGHT - figure;
 	Position *delta = deltaPos[index];
 	bool line = makeLine[index];
@@ -417,7 +415,10 @@ Positions Disposition::capturesFigureFor(Position from, Figure figure)
 			if (FIGURE(_state.cellAt(pos)) == figure &&
 				COLOR(_state.cellAt(from)) != COLOR(_state.cellAt(pos)))
 			{
-				captures.push_back(pos);
+				Move m(figure, pos, from, Capture);
+				m.capturePosition = from;
+				m.captureFigure = _state.cellAt(from);
+				captures.push_back(m);
 			}
 		}
 		i++;
@@ -445,14 +446,14 @@ Moves Disposition::possiblePawnFrom(Position pos)
 	
 	Position p = pos + Position(0, direction);
 	if (!p.out_of_desk() && _state.cellAt(p) == 0) {
-		possible.push_back(Move(pos, p, Normal));
+		possible.push_back(Move(PAWN, pos, p, Normal));
 	} else {
 		return possible;
 	}
 	if (!IS_MOVED(_state.cellAt(pos))) {
 		Position p = pos + Position(0, direction*2);
 		if (!p.out_of_desk() && _state.cellAt(p) == 0) {
-			possible.push_back(Move(pos, p, Normal));
+			possible.push_back(Move(PAWN, pos, p, Normal));
 		}
 	}
 	return possible;
@@ -482,7 +483,7 @@ Moves Disposition::possibleKingFrom(Position from)
 				}
 			}
 			if (isCastling) {
-				Move m(from, Position(2, y), QueenCastling);
+				Move m(KING, from, Position(2, y), QueenCastling);
 				possible.push_back(m);
 			}
 		}
@@ -495,7 +496,7 @@ Moves Disposition::possibleKingFrom(Position from)
 				}
 			}
 			if (isCastling) {
-				Move m(from, Position(6, y), KingCastling);
+				Move m(KING, from, Position(6, y), KingCastling);
 				possible.push_back(m);
 			}
 		}
@@ -518,13 +519,13 @@ Moves Disposition::possibleFigureFrom(Position from)
 		}
 		if (line) {
 			while (!pos.out_of_desk() && _state.cellAt(pos) == 0) {
-				possible.push_back(Move(from, pos, Normal));
+				possible.push_back(Move(FIGURE(_state.cellAt(from)), from, pos, Normal));
 				pos = pos + delta[i];
 			}
 		}
 		if (!pos.out_of_desk()) {
 			if (_state.cellAt(pos) == 0) {
-				possible.push_back(Move(from, pos, Normal));
+				possible.push_back(Move(FIGURE(_state.cellAt(from)), from, pos, Normal));
 			}
 		}
 		i++;

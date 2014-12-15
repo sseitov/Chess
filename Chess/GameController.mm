@@ -315,13 +315,13 @@ enum Depth {
 - (void)didMakeMove:(vchess::Move)move
 {
 	[_desk makeMove:move inGame:&_currentGame completion:nil];
-	move.createNotation(_currentGame.state().cellAt(move.to));
 	_moves.push_back(move);
 	[self logMove:move];
 	[_table reloadData];
 	_desk.userInteractionEnabled = NO;
 	[self switchColor];
 	[self bestMove];
+//	_desk.userInteractionEnabled = YES;
 }
 
 - (vchess::Moves)generateMovesForFigure:(FigureView*)figure
@@ -472,15 +472,17 @@ enum Depth {
 	int y1 = turn[1] - '1';
 	int x2 = turn[2] - 'a';
 	int y2 = turn[3] - '1';
+	vchess::Position from(x1, y1);
 	vchess::Position to(x2, y2);
-	unsigned char figure = _currentGame.state().cellAt(to);
-	if (figure) {
-		vchess::Move m(vchess::Position(x1, y1), vchess::Position(x2, y2), vchess::Capture);
+	unsigned char fromFigure = _currentGame.state().cellAt(from);
+	unsigned char toFigure = _currentGame.state().cellAt(to);
+	if (toFigure) {
+		vchess::Move m(vchess::FIGURE(fromFigure), from, to, vchess::Capture);
 		m.capturePosition = to;
-		m.captureFigure = figure;
+		m.captureFigure = toFigure;
 		return m;
 	} else {
-		return vchess::Move(vchess::Position(x1, y1), vchess::Position(x2, y2), vchess::Normal);
+		return vchess::Move(vchess::FIGURE(fromFigure),from, to, vchess::Normal);
 	}
 }
 
@@ -494,7 +496,23 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	if (depth == 0) return position.evaluate(color);
 	
 	vchess::Moves turns = position.genMoves(color, vchess::Position());
+	
 	std::vector<vchess::Move>::iterator it = turns.begin();
+	if (depth == DEPTH) {
+//		NSLog(@"SEARCH FOR COLOR %d =================================", color);
+		while (it != turns.end() && alpha < beta) {
+			vchess::Move m = *it;
+			bool moveColor = vchess::COLOR(position.state().cellAt(m.from));
+			if (moveColor != color) {
+//				NSLog(@"error move %s", m.notation().c_str());
+				it = turns.erase(it);
+			} else {
+				it++;
+			}
+		}
+	}
+
+	it = turns.begin();
 	while (it != turns.end() && alpha < beta) {
 		vchess::Move m = *it;
 		position.pushState();
@@ -517,9 +535,9 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 #ifdef DO_LOG
 	NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
 	if (move.moveType != vchess::NotMove) {
-		NSLog(@"%@ %s", color, move.notation.c_str());
+		NSLog(@"%@ %s", color, move.notation().c_str());
 	} else {
-		NSLog(@"Invalid move");
+		NSLog(@"Null move");
 	}
 #endif
 }
@@ -539,11 +557,7 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 			DEPTH = _depth;
 			search(_currentGame, _desk.activeColor, DEPTH, -vchess::W_INFINITY, vchess::W_INFINITY);
 		}
-		if (best_move.moveType != vchess::NotMove) {
-			best_move.createNotation(_currentGame.state().cellAt(best_move.from));
-		}
 		[self logMove:best_move];
-		
 		dispatch_async(dispatch_get_main_queue(), ^()
 					   {
 						   [MBProgressHUD hideHUDForView:self.view animated:YES];

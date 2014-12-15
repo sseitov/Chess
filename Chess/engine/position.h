@@ -47,6 +47,8 @@ namespace vchess {
 		{
 			if (out_of_desk()) {
 				return "out of desk";
+			} else if (isNull()) {
+				return "Null";
 			} else {
 				std::string text;
 				text.push_back('a'+_x);

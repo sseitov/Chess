@@ -73,8 +73,8 @@ namespace vchess {
 		bool checkEnd();
 		
 		Moves capturesFor(bool color);			// white - false, black - true
-		Positions capturesPawnFor(Position pos, bool color);
-		Positions capturesFigureFor(Position from, Figure figure);
+		Moves capturesPawnFor(Position pos, bool color);
+		Moves capturesFigureFor(Position from, Figure figure);
 		
 		Moves possibleFrom(Position pos);
 		Moves possiblePawnFrom(Position pos);

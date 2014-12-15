@@ -24,6 +24,7 @@ namespace vchess {
 	};
 	
 	struct Move {
+		Figure figure;
 		Position from;
 		Position to;
 		MoveType moveType;
@@ -31,54 +32,54 @@ namespace vchess {
 		bool firstMove;				// первый ход
 		unsigned char captureFigure;
 		Position capturePosition;
-		std::string notation;
 		
 		Move()
 			: moveType(NotMove), promote(false), firstMove(false), captureFigure(0)
 		{}
 		Move(const Move& other)
-			: from(other.from), to(other.to), moveType(other.moveType), promote(other.promote), firstMove(other.firstMove),
-			captureFigure(other.captureFigure), capturePosition(other.capturePosition), notation(other.notation)
+			: figure(other.figure), from(other.from), to(other.to), moveType(other.moveType), promote(other.promote), firstMove(other.firstMove),
+			captureFigure(other.captureFigure), capturePosition(other.capturePosition)
 		{}
-		Move(Position _from, Position _to, MoveType _moveType)
-			: from(_from), to(_to), moveType(_moveType), promote(false), firstMove(false), captureFigure(0)
+		Move(Figure _figure, Position _from, Position _to, MoveType _moveType)
+			: figure(_figure), from(_from), to(_to), moveType(_moveType), promote(false), firstMove(false), captureFigure(0)
 		{}
 		
-		void createNotation(unsigned char figure)
+		std::string notation() const
 		{
 			if (moveType != NotMove) {
 				if (moveType == QueenCastling) {
-					notation = "O-O-O";
+					return "O-O-O";
 				} else if (moveType == KingCastling) {
-					notation = "O-O";
+					return "O-O";
 				} else {
+					std::string text;
 					switch (FIGURE(figure)) {
 						case KING:
-							notation = "K";
+							text = "K";
 							break;
 						case QUEEN:
-							notation = "Q";
+							text = "Q";
 							break;
 						case ROOK:
-							notation = "R";
+							text = "R";
 							break;
 						case BISHOP:
-							notation = "B";
+							text = "B";
 							break;
 						case KNIGHT:
-							notation = "N";
+							text = "N";
 							break;
 						default:
-							notation = "";
 							break;
 					}
 					
-					notation += (from.notation() + to.notation());
+					text += (from.notation() + to.notation());
 					if (moveType == Capture || moveType == EnPassant || !capturePosition.isNull())
-						notation += "x";
+						text += "x";
+					return text;
 				}
 			} else {
-				notation = "NULL MOVE";
+				return "";
 			}
 		}
 		

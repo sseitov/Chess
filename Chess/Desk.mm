@@ -147,13 +147,8 @@
 		FigureView *eat = [self figureAt:move.capturePosition];
 		eat.liveState = KILLED;
 		[self moveFigure:eat to:vchess::Position()];
-	} else {
-		FigureView* f = [self figureAt:move.to];
-		if (f) {
-			NSLog(@"move type error ");
-		}
 	}
-	
+ 	
 	if (move.promote) {
 		[figure promote:true];
 	}
