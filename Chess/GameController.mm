@@ -498,17 +498,16 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	vchess::Moves turns = position.genMoves(color, vchess::Position());
 	
 	std::vector<vchess::Move>::iterator it = turns.begin();
-	if (depth == DEPTH) {
-//		NSLog(@"SEARCH FOR COLOR %d =================================", color);
-		while (it != turns.end() && alpha < beta) {
-			vchess::Move m = *it;
-			bool moveColor = vchess::COLOR(position.state().cellAt(m.from));
-			if (moveColor != color) {
-//				NSLog(@"error move %s", m.notation().c_str());
-				it = turns.erase(it);
-			} else {
-				it++;
-			}
+	
+#pragma mark - TODO фильтр для чистки ошибочных ходов
+	while (it != turns.end() && alpha < beta) {
+		vchess::Move m = *it;
+		bool moveColor = vchess::COLOR(position.state().cellAt(m.from));
+		if (moveColor != color) {
+//			NSLog(@"error move %s", m.notation().c_str());
+			it = turns.erase(it);
+		} else {
+			it++;
 		}
 	}
 
