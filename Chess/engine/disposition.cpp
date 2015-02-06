@@ -303,7 +303,7 @@ static bool makeLine[5] = {false, true, true, true, false};
 
 Moves Disposition::capturesFor(bool color)
 {
-	// create list for captures (порядок по уменьшению веса взятой фигуры)
+	// create list for captures (по порядоку уменьшения веса взятой фигуры)
 	struct FIG_POS {
 		Figure fig;
 		Position pos;
@@ -330,7 +330,7 @@ Moves Disposition::capturesFor(bool color)
 	}
 	std::sort(list.rbegin(), list.rend());
 	
-	// create captures (порядок по увеличению веса берущей фигуры)
+	// create captures (по порядоку увеличения веса берущей фигуры)
 	Moves captures;
 	for (int i=0; i<list.size(); i++) {
 		Moves pawns = capturesPawnFor(list[i].pos, color);

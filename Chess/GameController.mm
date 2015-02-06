@@ -26,6 +26,27 @@ enum Depth {
 	Strong = 4
 };
 
+@interface NSIndexSet (indexOfIndex)
+
+- (NSUInteger)indexAtIndex:(NSUInteger)anIndex;
+
+@end
+
+@implementation NSIndexSet (indexOfIndex)
+
+- (NSUInteger)indexAtIndex:(NSUInteger)anIndex
+{
+	if (anIndex >= [self count])
+		return NSNotFound;
+	
+	NSUInteger index = [self firstIndex];
+	for (NSUInteger i = 0; i < anIndex; i++)
+		index = [self indexGreaterThanIndex:index];
+	return index;
+}
+
+@end
+
 @interface GameController () {
 	
 	vchess::Disposition _currentGame;
@@ -51,7 +72,6 @@ enum Depth {
 @property (strong, nonatomic) UITableView* table;
 
 @property (readwrite, nonatomic) BOOL isDebut;
-@property (strong, nonatomic) NSArray *debutBook;
 @property (readwrite, nonatomic) enum Depth depth;
 
 @end
@@ -105,8 +125,6 @@ enum Depth {
 	[_notationButton addTarget:self action:@selector(showNotation:) forControlEvents:UIControlEventTouchDown];
 	
 	srand((unsigned int)time(NULL));
-	_debutBook = [[NSArray alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"book" withExtension:@"plist"]];
-	
 
 	_desk.delegate = self;
 
@@ -374,6 +392,18 @@ enum Depth {
 	}];
 }
 
+- (void)logMove:(vchess::Move)move
+{
+#ifdef DO_LOG
+	NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
+	if (move.moveType != vchess::NotMove) {
+		NSLog(@"%@ %s", color, move.notation().c_str());
+	} else {
+		NSLog(@"Null move");
+	}
+#endif
+}
+
 #pragma mark - UITableView delegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -452,21 +482,22 @@ enum Depth {
 - (vchess::Move)searchFromBook
 {
 	NSString *text = [self gameText];
-	NSMutableArray *matchesArray = [NSMutableArray array];
+	NSArray* debutBook = [NSArray arrayWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"book" withExtension:@"plist"]];
+	NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
 	if ([text isEqual:@""]) {
-		[matchesArray addObjectsFromArray:_debutBook];
+		[indexes addIndexesInRange:{0, debutBook.count}];
 	} else {
-		for (NSString *line in _debutBook) {
+		for (NSString *line in debutBook) {
 			if ([line rangeOfString:text].location == 0 && line.length > text.length) {
-				[matchesArray addObject:line];
+				[indexes addIndex:[debutBook indexOfObject:line]];
 			}
 		}
 	}
-	if (matchesArray.count == 0) {
+	if (indexes.count == 0) {
 		return vchess::Move();
 	}
-	int index = rand() % matchesArray.count;
-	NSArray *bookTurns = [[matchesArray objectAtIndex:index] componentsSeparatedByString:@" "];
+	NSInteger index = rand() % indexes.count;
+	NSArray *bookTurns = [[debutBook objectAtIndex:[indexes indexAtIndex:index]] componentsSeparatedByString:@" "];
 	const char *turn = [[bookTurns objectAtIndex:_moves.size()] UTF8String];
 	int x1 = turn[0] - 'a';
 	int y1 = turn[1] - '1';
@@ -488,8 +519,6 @@ enum Depth {
 
 static vchess::Move best_move;
 static int DEPTH;
-
-static vchess::Position checkPos(7, 0);
 
 int search(vchess::Disposition position, bool color, int depth, int alpha, int beta)
 {
@@ -529,18 +558,6 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 	return alpha;
 }
 
-- (void)logMove:(vchess::Move)move
-{
-#ifdef DO_LOG
-	NSString* color = _desk.activeColor ? @"BLACK" : @"WHITE";
-	if (move.moveType != vchess::NotMove) {
-		NSLog(@"%@ %s", color, move.notation().c_str());
-	} else {
-		NSLog(@"Null move");
-	}
-#endif
-}
-
 - (void)bestMove
 {
 	[MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -572,7 +589,6 @@ int search(vchess::Disposition position, bool color, int depth, int alpha, int b
 									   _desk.userInteractionEnabled = YES;
 //									   [self bestMove];
 								   } else {
-									   NSLog(@"ERROR TURN");
 									   [self surrender];
 								   }
 							   }];
