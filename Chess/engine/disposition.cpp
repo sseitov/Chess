@@ -270,9 +270,15 @@ Moves Disposition::genMoves(bool color, const Position& from)
 	// filter by check anf setup promote
 	std::vector<Move>::iterator it = allMoves.begin();
 	it = allMoves.begin();
+	bool isCheckBefore = checkFor(color);
 	while (it != allMoves.end()) {
 		if (!IS_MOVED(_state.cellAt(it->from))) {
 			it->firstMove = true;
+		}
+		
+		if ((it->moveType == QueenCastling || it->moveType == KingCastling) && isCheckBefore) {
+			it = allMoves.erase(it);
+			continue;
 		}
 		
 		pushState();

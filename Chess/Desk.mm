@@ -152,7 +152,9 @@
 	if (move.promote) {
 		[figure promote:true];
 	}
-	AudioServicesPlaySystemSound (soundID);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableSound"]) {
+		AudioServicesPlaySystemSound (soundID);
+	}
 }
 
 - (BOOL)checkState:(vchess::GameState)state
