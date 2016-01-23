@@ -101,6 +101,7 @@ enum Depth {
 	_desk.delegate = self;
 
 	_timerLayout.constant = -40;
+	_timerView.hidden = YES;
 	
 	CGRect frame = CGRectMake(self.view.frame.size.width, 0, 0, self.view.frame.size.height);
 	_table = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
@@ -237,6 +238,7 @@ enum Depth {
 {
 	[_commandButton setTitle:@"Surrender" forState:UIControlStateNormal];
 	
+	_timerView.hidden = NO;
 	_timerLayout.constant = 6;
 	[UIView animateWithDuration:0.4
 					 animations:^{
@@ -281,6 +283,7 @@ enum Depth {
 						 [self.view layoutIfNeeded];
 					 }
 	 ];
+	_timerView.hidden = YES;
 	
 	_desk.userInteractionEnabled = NO;
 	[_timer invalidate];
