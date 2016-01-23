@@ -56,7 +56,6 @@ enum Depth {
 
 @property (weak, nonatomic) IBOutlet Desk *desk;
 @property (weak, nonatomic) IBOutlet UIButton *commandButton;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *timerLayout;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *timerView;
 @property (weak, nonatomic) IBOutlet UIImageView *logo;
 
@@ -117,8 +116,12 @@ enum Depth {
 
 	_desk.delegate = self;
 
-	_timerLayout.constant = -40;
-	_timerView.hidden = YES;
+	NSDictionary *attributes = @{UITextAttributeFont: [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.f],
+								 UITextAttributeTextColor: [UIColor whiteColor],
+								 UITextAttributeTextShadowColor: [UIColor clearColor],
+								 };
+	[_timerView setTitleTextAttributes:attributes forState:UIControlStateNormal];
+	_timerView.enabled = NO;
 	
 	CGRect frame = CGRectMake(self.view.frame.size.width, 0, 0, self.view.frame.size.height);
 	_table = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
@@ -270,13 +273,7 @@ enum Depth {
 {
 	[_commandButton setTitle:@"Surrender" forState:UIControlStateNormal];
 	
-	_timerView.hidden = NO;
-	_timerLayout.constant = 6;
-	[UIView animateWithDuration:0.4
-					 animations:^{
-						 [self.view layoutIfNeeded];
-					 }
-	 ];
+	_timerView.enabled = YES;
 	
 	_isDebut = YES;
 	[_whiteLostFigures clear];
@@ -308,21 +305,12 @@ enum Depth {
 - (void)stopGame
 {
 	[_commandButton setTitle:@"Start New Game" forState:UIControlStateNormal];
-	
-	_timerLayout.constant = -40;
-	[UIView animateWithDuration:0.4
-					 animations:^{
-						 [self.view layoutIfNeeded];
-					 }
-					 completion:^(BOOL finished){
-						 _timerView.hidden = YES;
-					 }
-	 ];
-	
+		
 	_desk.userInteractionEnabled = NO;
 	[_timer invalidate];
 	_timer = nil;
 	
+	_timerView.enabled = NO;
 	[_timerView setTitle:@"00:00" forSegmentAtIndex:0];
 	[_timerView setTitle:@"00:00" forSegmentAtIndex:1];
 }
