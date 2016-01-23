@@ -55,14 +55,13 @@ enum Depth {
 }
 
 @property (weak, nonatomic) IBOutlet Desk *desk;
+@property (weak, nonatomic) IBOutlet UIButton *commandButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *timerLayout;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *timerView;
 
 @property (strong, nonatomic) LostFigures *whiteLostFigures;
 @property (strong, nonatomic) LostFigures *blackLostFigures;
 
-@property (strong, nonatomic) UIButton* startButton;
-@property (strong, nonatomic) UIButton* stopButton;
-
-@property (strong, nonatomic) UISegmentedControl *timerView;
 @property (strong, nonatomic) NSTimer *timer;
 
 @property (readwrite, nonatomic) BOOL userColor;
@@ -75,18 +74,6 @@ enum Depth {
 @end
 
 @implementation GameController
-
-+ (UIButton*)buttonWithSize:(CGSize)size color:(UIColor*)btnColor
-{
-	UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-	[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	button.backgroundColor = btnColor;
-	button.layer.borderWidth = 1.0;
-	button.layer.masksToBounds = YES;
-	button.layer.cornerRadius = 10.0;
-	button.layer.borderColor = btnColor.CGColor;
-	return button;
-}
 
 - (void)viewDidLoad
 {
@@ -103,22 +90,6 @@ enum Depth {
 	_blackLostFigures = [[LostFigures alloc] initWithFrame:CGRectZero];
 	[self.view addSubview:_blackLostFigures];
 	
-	_startButton = [GameController buttonWithSize:CGSizeMake(160, 30)
-											color:[UIColor colorWithRed:46.0/255.0 green:129.0/255.0 blue:24.0/255.0 alpha:1]];
-	[_startButton setTitle:@"Start Game" forState:UIControlStateNormal];
-	[_startButton addTarget:self action:@selector(doStartGame) forControlEvents:UIControlEventTouchDown];
-	
-	_stopButton = [GameController buttonWithSize:CGSizeMake(100, 30) color:[UIColor redColor]];
-	[_stopButton setTitle:@"Surrender" forState:UIControlStateNormal];
-	[_stopButton addTarget:self action:@selector(doStopGame) forControlEvents:UIControlEventTouchDown];
-	
-	self.navigationItem.titleView = _startButton;
-	
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(rotate)];
-	if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-		self.navigationItem.rightBarButtonItem.tintColor = [UIColor whiteColor];
-	}
-	
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"strongLevel"]) {
 		_depth = Fast;
 	} else {
@@ -129,17 +100,7 @@ enum Depth {
 
 	_desk.delegate = self;
 
-	_timerView = [[UISegmentedControl alloc] initWithItems:@[@"00:00", @"00:00"]];
-	_timerView.userInteractionEnabled = NO;
-	_timerView.tintColor = [UIColor grayColor];
-	[_timerView setWidth:60 forSegmentAtIndex:0];
-	[_timerView setWidth:60 forSegmentAtIndex:1];
-	
-	NSDictionary *attributes = @{UITextAttributeFont: [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.f],
-								 UITextAttributeTextColor: [UIColor whiteColor],
-								 UITextAttributeTextShadowColor: [UIColor clearColor],
-								 };
-	[_timerView setTitleTextAttributes:attributes forState:UIControlStateNormal];
+	_timerLayout.constant = -40;
 	
 	CGRect frame = CGRectMake(self.view.frame.size.width, 0, 0, self.view.frame.size.height);
 	_table = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
@@ -152,6 +113,15 @@ enum Depth {
 	[_desk resetDisposition:_currentGame.state()];
 }
 
+- (IBAction)command:(UIButton *)sender
+{
+	if (_timer == nil) {
+		[self doStartGame];
+	} else {
+		[self doStopGame];
+	}
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
@@ -160,22 +130,6 @@ enum Depth {
 	} else {
 		[self arrangeFromOrientation:UIInterfaceOrientationLandscapeLeft];
 	}
-	
-	UIBarButtonItem *notation = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"show_notation"] style:UIBarButtonItemStylePlain target:self action:@selector(showNotation:)];
-	if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-		notation.tintColor = [UIColor whiteColor];
-	}
-	
-	UIBarButtonItem *settings = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings"] style:UIBarButtonItemStylePlain target:self action:@selector(showSettings)];
-	if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-		settings.tintColor = [UIColor whiteColor];
-	}
-	
-	UIBarButtonItem *title = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"AppTitle"]]];
-	UIBarButtonItem* space1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	UIBarButtonItem* space2 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	NSArray* items =  @[settings, space1, title, space2, notation];
-	[self.navigationController.toolbar setItems:items];
 }
 
 - (void)arrangeFromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -224,7 +178,7 @@ enum Depth {
 }
 
 
-- (void)rotate
+- (IBAction)rotate:(id)sender
 {
 	[_desk rotate];
 	if ( UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
@@ -281,8 +235,14 @@ enum Depth {
 
 - (void)startGame
 {
-	[self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:_stopButton] animated:YES];
-	self.navigationItem.titleView = _timerView;
+	[_commandButton setTitle:@"Surrender" forState:UIControlStateNormal];
+	
+	_timerLayout.constant = 6;
+	[UIView animateWithDuration:0.4
+					 animations:^{
+						 [self.view layoutIfNeeded];
+					 }
+	 ];
 	
 	_isDebut = YES;
 	[_whiteLostFigures clear];
@@ -313,11 +273,19 @@ enum Depth {
 
 - (void)stopGame
 {
+	[_commandButton setTitle:@"Start New Game" forState:UIControlStateNormal];
+	
+	_timerLayout.constant = -40;
+	[UIView animateWithDuration:0.4
+					 animations:^{
+						 [self.view layoutIfNeeded];
+					 }
+	 ];
+	
 	_desk.userInteractionEnabled = NO;
-	[self.navigationItem setLeftBarButtonItem:nil animated:NO];
-	self.navigationItem.titleView = _startButton;
-	[self.navigationController.navigationBar layoutSubviews];
 	[_timer invalidate];
+	_timer = nil;
+	
 	[_timerView setTitle:@"00:00" forSegmentAtIndex:0];
 	[_timerView setTitle:@"00:00" forSegmentAtIndex:1];
 }
@@ -352,8 +320,8 @@ enum Depth {
 	[_table reloadData];
 	_desk.userInteractionEnabled = NO;
 	[self switchColor];
-//	[self bestMove];
-	_desk.userInteractionEnabled = YES;
+	[self bestMove];
+//	_desk.userInteractionEnabled = YES;
 }
 
 - (vchess::Moves)generateMovesForFigure:(FigureView*)figure
@@ -388,7 +356,7 @@ enum Depth {
 	[_desk addSubview:f];
 }
 
-- (void)showNotation:(UIButton*)sender
+- (IBAction)showNotation
 {
 	CGRect frame = _table.frame;
 	if (_table.frame.size.width > 0) {
@@ -430,21 +398,25 @@ enum Depth {
 	CGRect frame = tableView.frame;
 	frame.size.height = 44;
 	
+	UIFont* f = [UIFont fontWithName:@"HelveticaNeue-CondensedBold" size:15];
+	
 	frame.size.width /= 2;
 	frame.origin.x = 0;
 	UILabel *white = [[UILabel alloc] initWithFrame:frame];
-	white.backgroundColor = [UIColor grayColor];
+	white.backgroundColor = [UIColor lightGrayColor];
 	white.textColor = [UIColor whiteColor];
 	white.textAlignment = NSTextAlignmentCenter;
 	white.text = @"WHITE";
+	white.font = f;
 	[v addSubview:white];
 	
 	frame.origin.x = frame.size.width;
 	UILabel *black = [[UILabel alloc] initWithFrame:frame];
-	black.backgroundColor = [UIColor grayColor];
+	black.backgroundColor = [UIColor blackColor];
 	black.textColor = [UIColor whiteColor];
 	black.textAlignment = NSTextAlignmentCenter;
 	black.text = @"BLACK";
+	black.font = f;
 	[v addSubview:black];
 	
 	return v;
@@ -471,16 +443,9 @@ enum Depth {
 
 #pragma mark - Chess brain
 
-- (void)showSettings
+- (IBAction)showSettings:(id)sender
 {
 	[self performSegueWithIdentifier:@"showSettings" sender:self];
-/*	if (_depth == Fast) {
-		_depth = Strong;
-		[_levelButton setTitle:@"Strong mode" forState:UIControlStateNormal];
-	} else {
-		_depth = Fast;
-		[_levelButton setTitle:@"Fast mode" forState:UIControlStateNormal];
-	}*/
 }
 
 - (NSString*)gameText

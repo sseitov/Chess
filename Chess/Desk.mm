@@ -331,7 +331,7 @@
 		
 		offsetDivider += 4;
 		animationDuration += 1/offsetDivider;
-		if ((abs(originalOffsetX/offsetDivider) < 6) && (abs(originalOffsetY/offsetDivider) < 6)) {
+		if ((fabs(originalOffsetX/offsetDivider) < 6) && (fabs(originalOffsetY/offsetDivider) < 6)) {
 			stopBouncing = YES;
 		}
 	}

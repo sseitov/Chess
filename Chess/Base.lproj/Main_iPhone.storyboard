@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="j5m-UY-Vwg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="j5m-UY-Vwg">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
         <scene sceneID="igH-69-nND">
             <objects>
-                <navigationController toolbarHidden="NO" id="j5m-UY-Vwg" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Mdu-4p-mLc">
+                <navigationController id="j5m-UY-Vwg" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Mdu-4p-mLc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.10980392156862745" green="0.30980392156862746" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" id="m3S-km-Txm">
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="m3S-km-Txm">
+                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </toolbar>
                     <connections>
                         <segue destination="nHK-qi-kTr" kind="relationship" relationship="rootViewController" id="MIj-9g-pWE"/>
@@ -34,26 +38,79 @@
                         <viewControllerLayoutGuide type="bottom" id="Bi5-zV-8zg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="n2B-Dv-Wh3">
-                        <rect key="frame" x="0.0" y="44" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="44" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="ChessDesk~iphone.png" translatesAutoresizingMaskIntoConstraints="NO" id="kxD-Bm-XoR" customClass="Desk">
-                                <rect key="frame" x="0.0" y="80" width="320" height="320"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChessDesk~iphone.png" translatesAutoresizingMaskIntoConstraints="NO" id="kxD-Bm-XoR" customClass="Desk">
+                                <rect key="frame" x="0.0" y="40" width="320" height="320"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="320" id="5SB-1O-v9p"/>
+                                    <constraint firstAttribute="width" constant="320" id="pd0-dt-MmB"/>
+                                </constraints>
                             </imageView>
+                            <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yyo-rE-cre">
+                                <rect key="frame" x="60" y="490" width="200" height="29"/>
+                                <color key="backgroundColor" red="0.10980392160000001" green="0.30980392159999998" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="Ib9-6X-Xbz"/>
+                                    <constraint firstAttribute="width" constant="200" id="qCx-aI-3Km"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="00:00"/>
+                                    <segment title="00:00"/>
+                                </segments>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="kxD-Bm-XoR" secondAttribute="centerY" id="2ti-wd-taX"/>
-                            <constraint firstAttribute="centerX" secondItem="kxD-Bm-XoR" secondAttribute="centerX" id="aWB-lg-SvN"/>
+                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="RrX-J9-i4C"/>
+                            <constraint firstItem="Bi5-zV-8zg" firstAttribute="top" secondItem="yyo-rE-cre" secondAttribute="bottom" constant="6" id="iKZ-wG-Z4E"/>
+                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="top" secondItem="iKf-Wo-MwV" secondAttribute="bottom" constant="40" id="qTm-2D-Kyk"/>
+                            <constraint firstItem="yyo-rE-cre" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="v67-SD-5IY"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="g4N-wy-sj7">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="settings" id="8WU-Jr-3Dk">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="showSettings:" destination="nHK-qi-kTr" id="7kN-Uy-70n"/>
+                            </connections>
+                        </barButtonItem>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qHr-Ge-52z">
+                            <rect key="frame" x="55" y="7" width="162" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="Start New Game">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="command:" destination="nHK-qi-kTr" eventType="touchUpInside" id="hky-EF-FrN"/>
+                            </connections>
+                        </button>
+                        <rightBarButtonItems>
+                            <barButtonItem image="show_notation" id="w0f-Wm-gCN">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="showNotation" destination="nHK-qi-kTr" id="aNP-JV-WiI"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="refresh" id="DYD-jp-dK4">
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="rotate:" destination="nHK-qi-kTr" id="8E5-E1-sOI"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="commandButton" destination="qHr-Ge-52z" id="Noh-tM-qnK"/>
                         <outlet property="desk" destination="kxD-Bm-XoR" id="czI-ev-78G"/>
+                        <outlet property="timerLayout" destination="iKZ-wG-Z4E" id="swT-qf-hZC"/>
+                        <outlet property="timerView" destination="yyo-rE-cre" id="Jbz-7e-7F8"/>
                         <segue destination="bYk-yK-Q23" kind="modal" identifier="showSettings" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="mdB-0R-5sV"/>
                     </connections>
                 </viewController>
@@ -61,7 +118,7 @@
             </objects>
             <point key="canvasLocation" x="-427" y="236"/>
         </scene>
-        <!--Settings-->
+        <!--Settings View Controller-->
         <scene sceneID="wRI-kc-OEn">
             <objects>
                 <tableViewController id="L3f-9b-GjY" customClass="SettingsViewController" sceneMemberID="viewController">
@@ -71,8 +128,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingsCell" id="AUx-4R-1zR">
+                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AUx-4R-1zR" id="O6G-dE-6Qy">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5FJ-Sm-W9E">
@@ -100,12 +159,22 @@
                             <outlet property="delegate" destination="L3f-9b-GjY" id="4vA-zJ-d5z"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Settings" id="BVx-8i-KOT">
-                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="done" id="spa-ww-t6d">
+                    <navigationItem key="navigationItem" id="BVx-8i-KOT">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="spa-ww-t6d">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
                                 <action selector="done:" destination="L3f-9b-GjY" id="EVW-2g-VVT"/>
                             </connections>
                         </barButtonItem>
+                        <button key="titleView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ROA-lb-x1Q">
+                            <rect key="frame" x="96" y="7" width="128" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="Settings">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                        </button>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Te9-4I-491" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -117,9 +186,10 @@
             <objects>
                 <navigationController id="bYk-yK-Q23" sceneMemberID="viewController">
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="pEK-38-IYp">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="pEK-38-IYp">
                         <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.10980392160000001" green="0.30980392159999998" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="L3f-9b-GjY" kind="relationship" relationship="rootViewController" id="mrX-ni-MIR"/>
@@ -132,10 +202,7 @@
     </scenes>
     <resources>
         <image name="ChessDesk~iphone.png" width="320" height="320"/>
+        <image name="settings" width="22" height="22"/>
+        <image name="show_notation" width="22" height="16"/>
     </resources>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
-    </simulatedMetricsContainer>
 </document>
