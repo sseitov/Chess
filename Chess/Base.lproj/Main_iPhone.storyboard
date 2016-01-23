@@ -44,16 +44,16 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChessDesk~iphone.png" translatesAutoresizingMaskIntoConstraints="NO" id="kxD-Bm-XoR" customClass="Desk">
                                 <rect key="frame" x="0.0" y="40" width="320" height="320"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="320" id="5SB-1O-v9p"/>
-                                    <constraint firstAttribute="width" constant="320" id="pd0-dt-MmB"/>
+                                    <constraint firstAttribute="height" constant="320" id="4xt-hp-ZZz"/>
+                                    <constraint firstAttribute="width" constant="320" id="hFT-Zx-DzV"/>
                                 </constraints>
                             </imageView>
                             <segmentedControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yyo-rE-cre">
                                 <rect key="frame" x="60" y="490" width="200" height="29"/>
                                 <color key="backgroundColor" red="0.10980392160000001" green="0.30980392159999998" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="Ib9-6X-Xbz"/>
-                                    <constraint firstAttribute="width" constant="200" id="qCx-aI-3Km"/>
+                                    <constraint firstAttribute="width" constant="200" id="RCZ-TG-s7i"/>
+                                    <constraint firstAttribute="height" constant="28" id="Yuy-Wb-dyJ"/>
                                 </constraints>
                                 <segments>
                                     <segment title="00:00"/>
@@ -61,13 +61,22 @@
                                 </segments>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </segmentedControl>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppTitle.png" translatesAutoresizingMaskIntoConstraints="NO" id="dD1-vf-JJs">
+                                <rect key="frame" x="26" y="410" width="268" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="268" id="nDJ-rN-WFk"/>
+                                    <constraint firstAttribute="height" constant="80" id="wh6-LO-mN6"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="RrX-J9-i4C"/>
-                            <constraint firstItem="Bi5-zV-8zg" firstAttribute="top" secondItem="yyo-rE-cre" secondAttribute="bottom" constant="6" id="iKZ-wG-Z4E"/>
-                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="top" secondItem="iKf-Wo-MwV" secondAttribute="bottom" constant="40" id="qTm-2D-Kyk"/>
-                            <constraint firstItem="yyo-rE-cre" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="v67-SD-5IY"/>
+                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="top" secondItem="iKf-Wo-MwV" secondAttribute="bottom" constant="40" id="9Ur-bp-hmR"/>
+                            <constraint firstItem="dD1-vf-JJs" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="SHO-1v-gps"/>
+                            <constraint firstItem="dD1-vf-JJs" firstAttribute="top" secondItem="kxD-Bm-XoR" secondAttribute="bottom" constant="50" id="ZJ5-Wi-Xgj"/>
+                            <constraint firstItem="yyo-rE-cre" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="bYq-PJ-I3Y"/>
+                            <constraint firstItem="kxD-Bm-XoR" firstAttribute="centerX" secondItem="n2B-Dv-Wh3" secondAttribute="centerX" id="o2F-ee-dco"/>
+                            <constraint firstItem="Bi5-zV-8zg" firstAttribute="top" secondItem="yyo-rE-cre" secondAttribute="bottom" constant="6" id="pbo-8Z-m3J"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -109,7 +118,8 @@
                     <connections>
                         <outlet property="commandButton" destination="qHr-Ge-52z" id="Noh-tM-qnK"/>
                         <outlet property="desk" destination="kxD-Bm-XoR" id="czI-ev-78G"/>
-                        <outlet property="timerLayout" destination="iKZ-wG-Z4E" id="swT-qf-hZC"/>
+                        <outlet property="logo" destination="dD1-vf-JJs" id="EXp-AM-Q4h"/>
+                        <outlet property="timerLayout" destination="pbo-8Z-m3J" id="Ctz-AP-ZBz"/>
                         <outlet property="timerView" destination="yyo-rE-cre" id="Jbz-7e-7F8"/>
                         <segue destination="bYk-yK-Q23" kind="modal" identifier="showSettings" modalPresentationStyle="formSheet" modalTransitionStyle="coverVertical" id="mdB-0R-5sV"/>
                     </connections>
@@ -201,6 +211,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AppTitle.png" width="384" height="150"/>
         <image name="ChessDesk~iphone.png" width="320" height="320"/>
         <image name="settings" width="22" height="22"/>
         <image name="show_notation" width="22" height="16"/>

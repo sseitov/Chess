@@ -58,6 +58,7 @@ enum Depth {
 @property (weak, nonatomic) IBOutlet UIButton *commandButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *timerLayout;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *timerView;
+@property (weak, nonatomic) IBOutlet UIImageView *logo;
 
 @property (strong, nonatomic) LostFigures *whiteLostFigures;
 @property (strong, nonatomic) LostFigures *blackLostFigures;
@@ -75,6 +76,14 @@ enum Depth {
 
 @implementation GameController
 
+- (void)addBorderToView:(UIView*)v width:(CGFloat)width
+{
+	v.layer.borderWidth = width;
+	v.layer.masksToBounds = YES;
+	v.layer.cornerRadius = 10.0;
+	v.layer.borderColor = [UIColor whiteColor].CGColor;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -83,11 +92,19 @@ enum Depth {
 	
 	self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"marble.png"]];
 
+	_logo.hidden = YES;
+	
 	_desk.image = [UIImage imageNamed:@"ChessDesk"];
+	[self addBorderToView:_desk width:5.0];
 	
 	_whiteLostFigures = [[LostFigures alloc] initWithFrame:CGRectZero];
+	_whiteLostFigures.backgroundColor = [UIColor lightGrayColor];
+	[self addBorderToView:_whiteLostFigures width:(IS_PAD ? 5.0 : 2.0)];
 	[self.view addSubview:_whiteLostFigures];
+	
 	_blackLostFigures = [[LostFigures alloc] initWithFrame:CGRectZero];
+	_blackLostFigures.backgroundColor = [UIColor lightGrayColor];
+	[self addBorderToView:_blackLostFigures width:(IS_PAD ? 5.0 : 2.0)];
 	[self.view addSubview:_blackLostFigures];
 	
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"strongLevel"]) {
@@ -126,6 +143,9 @@ enum Depth {
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+	if (!IS_PAD && self.view.frame.size.height > 480) {
+		_logo.hidden = NO;
+	}
 	if ( UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
 		[self arrangeFromOrientation:UIInterfaceOrientationPortrait];
 	} else {
@@ -135,41 +155,53 @@ enum Depth {
 
 - (void)arrangeFromOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
-	{
-		if (_desk.rotated) {
-			_blackLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y - (IS_PAD ? 80 : 40),
-												 _desk.frame.size.width, IS_PAD ? 70 : 30);
-			_whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y + _desk.frame.size.width + 10,
-												 _desk.frame.size.width, IS_PAD ? 70 : 30);
-		} else {
-			_whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y - (IS_PAD ? 80 : 40),
-												 _desk.frame.size.width, IS_PAD ? 70 : 30);
-			_blackLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y + _desk.frame.size.width + 10,
-												 _desk.frame.size.width, IS_PAD ? 70 : 30);
-		}
-	} else {
-		if (_desk.rotated) {
-			_blackLostFigures.frame = CGRectMake(_desk.frame.origin.x - (IS_PAD ? 80 : 40), _desk.frame.origin.y,
-												 IS_PAD ? 70 : 30, _desk.frame.size.height);
-			_whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x + _desk.frame.size.width + 10, _desk.frame.origin.y,
-												 IS_PAD ? 70 : 30, _desk.frame.size.height);
-		} else {
-			_whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x - (IS_PAD ? 80 : 40), _desk.frame.origin.y,
-												 IS_PAD ? 70 : 30, _desk.frame.size.height);
-			_blackLostFigures.frame = CGRectMake(_desk.frame.origin.x + _desk.frame.size.width + 10, _desk.frame.origin.y,
-												 IS_PAD ? 70 : 30, _desk.frame.size.height);
-		}
-	}
 	CGRect frame = _table.frame;
 	if (_table.frame.size.width > 0) {
 		frame.origin.x = self.view.frame.size.width - TABLE_WIDTH;
 	} else {
 		frame.origin.x = self.view.frame.size.width;
 	}
-	[UIView animateWithDuration:0.3f animations:^(){
-		_table.frame = frame;
-	}];
+	[UIView animateWithDuration:0.3f
+					 animations:^(){
+						 _table.frame = frame;
+					 } completion:^(BOOL finished) {
+						 if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+						 {
+							 if (_desk.rotated) {
+								 _blackLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y - (IS_PAD ? 80 : 40),
+																	  _desk.frame.size.width, IS_PAD ? 70 : 30);
+								 _whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y + _desk.frame.size.width + 10,
+																	  _desk.frame.size.width, IS_PAD ? 70 : 30);
+							 } else {
+								 _whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y - (IS_PAD ? 80 : 40),
+																	  _desk.frame.size.width, IS_PAD ? 70 : 30);
+								 _blackLostFigures.frame = CGRectMake(_desk.frame.origin.x, _desk.frame.origin.y + _desk.frame.size.width + 10,
+																	  _desk.frame.size.width, IS_PAD ? 70 : 30);
+							 }
+						 } else {
+							 if (_desk.rotated) {
+								 _blackLostFigures.frame = CGRectMake(_desk.frame.origin.x - (IS_PAD ? 80 : 40), _desk.frame.origin.y,
+																	  IS_PAD ? 70 : 30, _desk.frame.size.height);
+								 _whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x + _desk.frame.size.width + 10, _desk.frame.origin.y,
+																	  IS_PAD ? 70 : 30, _desk.frame.size.height);
+							 } else {
+								 _whiteLostFigures.frame = CGRectMake(_desk.frame.origin.x - (IS_PAD ? 80 : 40), _desk.frame.origin.y,
+																	  IS_PAD ? 70 : 30, _desk.frame.size.height);
+								 _blackLostFigures.frame = CGRectMake(_desk.frame.origin.x + _desk.frame.size.width + 10, _desk.frame.origin.y,
+																	  IS_PAD ? 70 : 30, _desk.frame.size.height);
+							 }
+						 }
+						 _blackLostFigures.hidden = NO;
+						 _whiteLostFigures.hidden = NO;
+					 }
+	 ];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	_blackLostFigures.hidden = YES;
+	_whiteLostFigures.hidden = YES;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -282,8 +314,10 @@ enum Depth {
 					 animations:^{
 						 [self.view layoutIfNeeded];
 					 }
+					 completion:^(BOOL finished){
+						 _timerView.hidden = YES;
+					 }
 	 ];
-	_timerView.hidden = YES;
 	
 	_desk.userInteractionEnabled = NO;
 	[_timer invalidate];

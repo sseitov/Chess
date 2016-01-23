@@ -121,6 +121,7 @@
 		2C59018319E544F5004D65A9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C59018219E544F5004D65A9 /* Images.xcassets */; };
 		2C5901A219E5457A004D65A9 /* GameController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2C5901A119E5457A004D65A9 /* GameController.mm */; };
 		2C5D19FF1C53B9CC0089B1AD /* Default-568h.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C5D19FE1C53B9CC0089B1AD /* Default-568h.png */; };
+		2C5D1A011C53BCB30089B1AD /* AppTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C5D1A001C53BCB30089B1AD /* AppTitle.png */; };
 		2CBB2B8719EAE7C800E05F12 /* TableViewCell.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2CBB2B8619EAE7C800E05F12 /* TableViewCell.mm */; };
 		2CBC5EDD1A8788EE00610247 /* marble.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC5EDC1A8788EE00610247 /* marble.png */; };
 		2CBC5EE31A8799AB00610247 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CBC5EE21A8799AB00610247 /* SettingsViewController.m */; };
@@ -259,6 +260,7 @@
 		2C5901A019E5457A004D65A9 /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
 		2C5901A119E5457A004D65A9 /* GameController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameController.mm; sourceTree = "<group>"; };
 		2C5D19FE1C53B9CC0089B1AD /* Default-568h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h.png"; path = "Images/Default-568h.png"; sourceTree = "<group>"; };
+		2C5D1A001C53BCB30089B1AD /* AppTitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AppTitle.png; path = Images/AppTitle.png; sourceTree = "<group>"; };
 		2CBB2B8519EAE7C800E05F12 /* TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
 		2CBB2B8619EAE7C800E05F12 /* TableViewCell.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TableViewCell.mm; sourceTree = "<group>"; };
 		2CBC5EDC1A8788EE00610247 /* marble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = marble.png; path = Images/marble.png; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 		2C4791A019E56E6C00D0DBFD /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				2C5D1A001C53BCB30089B1AD /* AppTitle.png */,
 				2C5D19FE1C53B9CC0089B1AD /* Default-568h.png */,
 				2CBC5EDC1A8788EE00610247 /* marble.png */,
 				2C4791A119E56E8000D0DBFD /* ChessDesk~ipad.png */,
@@ -648,6 +651,7 @@
 				2C4791F319E5A65E00D0DBFD /* SmallBlackP~ipad.png in Resources */,
 				2C47926919E5A67C00D0DBFD /* WhiteN~iphone.png in Resources */,
 				2C4791FA19E5A65E00D0DBFD /* SmallWhiteB~ipad@2x.png in Resources */,
+				2C5D1A011C53BCB30089B1AD /* AppTitle.png in Resources */,
 				EDF5097319E6A6290013D7B9 /* book.plist in Resources */,
 				2C47926A19E5A67C00D0DBFD /* WhiteN~iphone@2x.png in Resources */,
 				2C47925619E5A67C00D0DBFD /* SmallBlackQ~iphone@2x.png in Resources */,
